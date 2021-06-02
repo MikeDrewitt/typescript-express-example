@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Tyepscript Express/ TypeORM Example",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node-dev src/index.ts",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js  --config src/database.ts",
     "test": "jest --passWithNoTests",
     "clean": "rimraf build/*",
@@ -17,6 +17,7 @@
     "npm-run-all": "^4.1.5",
     "rmraf": "^1.0.3",
     "ts-node": "^8.10.1",
+    "ts-node-dev": "^1.1.6",
     "typescript": "^4.3.2"
   },
   "dependencies": {
