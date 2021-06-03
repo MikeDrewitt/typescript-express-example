@@ -1,3 +1,5 @@
-export async function get(req: any, res: any, next: any) {
-  res.status(200).send();
+import { Request, Response, NextFunction } from 'express'
+
+export async function get(req: Request, res: Response, next: NextFunction) {
+  res.status(200).send()
 }

@@ -1,4 +1,6 @@
-import { ApiError, Unknown } from "../constant/api.error";
+import { Request, Response, NextFunction } from 'express'
+
+import { GenericResponse, Unknown } from '../utils/apiResponse.utils'
 
 /**
  * Middleware function that acts as a error handler for the routers/controllers/ other middleware.
@@ -13,14 +15,13 @@ import { ApiError, Unknown } from "../constant/api.error";
  * @param {*} res
  * @param {*} next
  */
-function globalErrorHandler(err: Error, req: any, res: any, next: any) {
+function globalErrorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
   if (err instanceof Error) {
-    if (err.message === "Unimplemented")
-      res.status(501).send(new ApiError("Endpoint has not been implemented"));
-    else res.status(400).send(new ApiError(err.message));
+    if (err.message === 'Unimplemented') res.status(501).send(new GenericResponse('Endpoint has not been implemented'))
+    else res.status(400).send(new GenericResponse(err.message))
   }
 
-  res.status(400).send(Unknown);
+  res.status(400).send(Unknown)
 }
 
-export default globalErrorHandler;
+export default globalErrorHandler

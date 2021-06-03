@@ -1,18 +1,11 @@
-import { check, validationResult } from "express-validator";
+import { check } from 'express-validator'
 
-export const create = [
-  check("username").isString().trim(),
-  check("name").isString().trim(),
-  (req: any, res: any, next: any) => {
-    const errors = validationResult(req);
+import validate from './generic.validator'
 
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
+const email = check('email').isString().trim().isEmail()
+const preferredName = check('preferredName').isString().trim().isLength({ max: 128 }).optional({ nullable: true })
+const schoolId = check('schoolId').isString().trim().isLength({ max: 128 }).optional({ nullable: true })
 
-    next();
-  },
-];
+const validator = [email, preferredName, schoolId, validate]
 
-export const update = [
-  check("username").isString().trim().optional({ nullable: true }),
-];
+export default validator

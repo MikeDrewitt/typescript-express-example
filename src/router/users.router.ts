@@ -1,30 +1,20 @@
 // Libraries
-import express from "express";
+import express from 'express'
 
 // Middleware
-import {
-  create as createValidator,
-  update as updateValidator,
-} from "../middleware/validator/users.validator";
+import validator from '../middleware/validator/users.validator'
+import serializer from '../middleware/serializer/users.serizalizer'
+import { idAsInt } from '../middleware/validator/generic.validator'
 
 // Controller
-import {
-  get,
-  detail,
-  post,
-  patch,
-  _delete,
-} from "../controller/users.controller";
+import UserController from '../controller/users.controller'
 
-// Serialization
-import { generic as genericSerializer } from "../middleware/serializer/users.serizalizer";
+const Router = express.Router()
 
-const Router = express.Router();
+Router.get('/', UserController.get, serializer)
+Router.get('/:id', idAsInt, UserController.detail, serializer)
+Router.post('/', validator, UserController.post, serializer)
+Router.put('/:id', idAsInt, validator, UserController.put)
+Router.delete('/:id', idAsInt, UserController._delete)
 
-Router.get("/", get, genericSerializer);
-Router.get("/:id", detail, genericSerializer);
-Router.post("/", createValidator, post, genericSerializer);
-Router.patch("/:id", updateValidator, patch);
-Router.delete("/:id", _delete);
-
-export default Router;
+export default Router

@@ -1,21 +1,26 @@
-import Users from "../../model/users.model";
+import { Request, Response, NextFunction } from 'express'
 
-type UserRequest = { user: Users; users: Users[]; status: number };
+import User from '../../model/users.model'
+import UserType from '../../shared/types/user.type'
 
-export function generic(req: any, res: any, next: any) {
-  const { user = null, users = [], status = 200 }: UserRequest = req;
+import { Unknown } from '../../utils/apiResponse.utils'
 
-  // The controller is only returning user || users never both
-  // if we see user here, consider that good enough- serialize and return
-  const response = user ? serialize(user) : users.map(serialize);
+export default function (req: Request, res: Response, next: NextFunction) {
+  // No data applied at the controller level
+  if (!req.user && !req.users) return res.status(400).send(Unknown)
 
-  res.status(status).send(response);
+  const response = req.user ? serialize(req.user) : req.users.map(serialize)
+
+  res.status(req.statusCode).send(response)
 }
 
-function serialize(user: Users) {
+function serialize(user: User): UserType {
   return {
     id: user.id,
-    username: user.username,
-    createdAt: user.createdAt,
-  };
+    schoolId: user.schoolId,
+    email: user.email,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
+    preferredName: user.preferredName,
+  }
 }

@@ -1,78 +1,71 @@
-import { validationResult } from "express-validator";
+import { Request, Response, NextFunction } from 'express'
 
-// Models
-import Users from "../model/users.model";
+import UserService from '../services/user.service'
 
-import { NotFound } from "../constant/api.error";
+import { NotFound, Updated } from '../utils/apiResponse.utils'
 
-export async function get(req: any, res: any, next: any) {
+export async function get(req: Request, res: Response, next: NextFunction) {
   try {
-    req.users = await Users.list();
+    req.users = await UserService.list()
+    req.statusCode = 200
 
-    next();
+    next()
   } catch (err) {
-    next(err);
+    next(err)
   }
 }
 
-export async function detail(req: any, res: any, next: any) {
+export async function detail(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
-    const user = await Users.retrieve(id);
+    const id = parseInt(req.params.id)
+    const user = await UserService.retrieve(id)
 
-    if (!user) return res.status(404).json(NotFound);
+    if (!user) return res.status(404).json(NotFound)
 
-    req.user = user;
-    next();
+    req.user = user
+    req.statusCode = 200
+
+    next()
   } catch (err) {
-    next(err);
+    next(err)
   }
 }
 
-export async function post(req: any, res: any, next: any) {
+export async function post(req: Request, res: Response, next: NextFunction) {
   try {
-    const { username, name, email } = req.body;
-    const user = new Users(username, name, email);
-    const dbUser = await user.create();
+    req.user = await UserService.create(req.body)
+    req.statusCode = 201
 
-    res.status(201).send(dbUser);
+    next()
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err });
+    res.status(400).json({ error: err })
   }
 }
 
-export async function patch(req: any, res: any, next: any) {
+export async function put(req: Request, res: Response, next: NextFunction) {
   try {
-    const { body } = req;
-    const { id } = req.params;
+    req.body.id = parseInt(req.params.id)
+    const results = await UserService.update(req.body)
 
-    const errors = validationResult(req);
+    if (!results.affected) return res.status(404).json(NotFound)
 
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
-
-    const user = await Users.retrieve(id);
-
-    if (!user) res.status(404).send();
-
-    await user.update(body);
-
-    res.status(200).send();
+    res.status(200).json(Updated)
   } catch (err) {
-    next(err);
+    next(err)
   }
 }
 
-export async function _delete(req: any, res: any, next: any) {
+export async function _delete(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id }: { id: number } = req.params;
-    const dbResponse = await Users.delete(id);
+    const id = parseInt(req.params.id)
+    const results = await UserService._delete(id)
 
-    if (!dbResponse.affected) return res.status(404).json(NotFound);
+    if (!results.affected) return res.status(404).json(NotFound)
 
-    res.status(204).send();
+    res.status(204).send()
   } catch (err) {
-    next(err);
+    next(err)
   }
 }
+
+export default { get, detail, post, put, _delete }

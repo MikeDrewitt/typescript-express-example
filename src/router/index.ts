@@ -1,17 +1,15 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from 'express'
 
-import status from "./status.router";
-import users from "./users.router";
+import status from './status.router'
+import users from './users.router'
 
-import { NotFound } from "../constant/api.error";
+import { NotFound } from '../utils/apiResponse.utils'
 
-const Router = express.Router();
+const Router = express.Router()
 
-Router.use("/status", status);
-Router.use("/users", users);
+Router.use('/status', status)
+Router.use('/users', users)
 
-Router.use("/", (req: any, res: any, next: any) =>
-  res.status(404).send(NotFound)
-);
+Router.use('/', (req: Request, res: Response, next: NextFunction) => res.status(404).send(NotFound))
 
-export default Router;
+export default Router

@@ -1,64 +1,25 @@
-import {
-  Entity,
-  Column,
-  FindManyOptions,
-  getManager,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm'
 
-@Entity()
-export default class Users {
+@Entity('users')
+export default class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn()
-  deletedAt?: Date;
-
-  @Column({ length: 32 })
-  username: string;
+  deletedAt?: Date
 
   @Column({ length: 128 })
-  name: string;
+  email: string
 
-  @Column({ length: 128 })
-  email: string;
+  @Column({ length: 128, nullable: true })
+  schoolId: string
 
-  constructor(username: string, name: string, email: string) {
-    this.username = username;
-    this.name = name;
-    this.email = email;
-  }
-
-  public async create() {
-    return await getManager().save(this);
-  }
-
-  public async update(updates: object) {
-    return await getManager().update(Users, this.id, updates);
-  }
-
-  public static async delete(id: number) {
-    return await getManager().softDelete(Users, { id });
-  }
-
-  public static async retrieve(id: number) {
-    return await getManager()
-      .getRepository(Users)
-      .findOne({ id, deletedAt: null });
-  }
-
-  public static async list(options?: FindManyOptions<Users>) {
-    return await getManager()
-      .getRepository(Users)
-      .find({ ...options, deletedAt: null });
-  }
+  @Column({ length: 128, nullable: true })
+  preferredName: string
 }

@@ -1,11 +1,11 @@
 // Libraries
-import express from "express";
+import express from 'express'
 
 // Controller
-import { get } from "../controller/status.controller";
+import { get } from '../controller/status.controller'
 
-const Router = express.Router();
+const Router = express.Router()
 
-Router.get("/", get);
+Router.get('/', get)
 
-export default Router;
+export default Router

@@ -1,24 +1,25 @@
-import { ConnectionOptions } from "typeorm";
+import { ConnectionOptions } from 'typeorm'
 
-import environment from "./environment";
+import environment from './environment'
 
 const typeORMConfiguration: ConnectionOptions = {
-  type: "postgres",
+  type: 'postgres',
   host: environment.dbHost,
   username: environment.dbUsername,
   password: environment.dbPassword,
   database: environment.database,
   port: 5432,
-  synchronize: false,
-  logging: false,
-  entities: ["src/model/**/*.ts"],
-  migrations: ["src/migration/**/*.ts"],
-  subscribers: ["src/subscriber/**/*.ts"],
+  synchronize: false, // prevents api from auto migrating to match models on startup
+  logging: environment.logDB,
+  maxQueryExecutionTime: 1000, // logs queries longer than 1 second
+  entities: [`${__dirname}/model/**/*.{ts,js}`],
+  migrations: [`${__dirname}/migration/**/*.{ts,js}`],
+  subscribers: [`${__dirname}/migration/**/*.{ts,js}`],
   cli: {
-    entitiesDir: "src/model",
-    migrationsDir: "src/migration",
-    subscribersDir: "src/subscriber",
+    entitiesDir: `${__dirname}/model`,
+    migrationsDir: `${__dirname}/migration`,
+    subscribersDir: `${__dirname}/subscriber`,
   },
-};
+}
 
-export default typeORMConfiguration;
+export default typeORMConfiguration
