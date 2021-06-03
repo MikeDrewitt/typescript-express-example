@@ -8,12 +8,6 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import { createConnection } from 'typeorm'
 
-// Allows alias paths
-// New paths need to be added to package.json, tsconfig.json, and jest.config.js
-// tsconfig.json - allows linting + general typescript to work
-// package.json - allows compiled js to work
-// jest.config.js - allows testing imports to work
-
 import environment from './environment'
 import connectionInfo from './database'
 
